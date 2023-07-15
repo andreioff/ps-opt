@@ -11,145 +11,96 @@ To use evolearn, first install it using pip:
 Genetic Optimization CV
 ----------------
 
-To perform hyperparameter tuning using genetic algoritm,
-you need to first import other modules from 
-
-1) ``evolearn.hyperparameter_tuning.initialization``
-2) ``evolearn.hyperparameter_tuning.evaluation``
-3) ``evolearn.hyperparameter_tuning.selection``
-4) ``evolearn.hyperparameter_tuning.mating``
-5) ``evolearn.hyperparameter_tuning.reproduction``
-6) ``evolearn.hyperparameter_tuning.mutation``
-7) ``evolearn.hyperparameter_tuning.environment`` (optional)
-8) ``evolearn.hyperparameter_tuning.genetic_hyperparameter_tuning`` 
-
-Although the modules from ``environment`` are optional for you to determine to
-use them in your search or not, the searching might end up stopping early or not 
-finding the ideal results. These modules can help to prevent pre-mature convergence
-and also control other hyperparameters for GA.
-
-For example:
-
-    from evolearn.hyperparameter_tuning.initialization import Genes
-    from evolearn.hyperparameter_tuning.evaluation import FitnessFunction
-    from evolearn.hyperparameter_tuning.selection import (RankSelection,
-                                               				RouletteWheelSelection,
-                                                				SteadyStateSelection,
-                                                				TournamentSelection,
-                                                				StochasticUniversalSampling,
-                                                				BoltzmannSelection
-                                                				)
-    from evolearn.hyperparameter_tuning.mating import MatingFunction
-    from evolearn.hyperparameter_tuning.reproduction import (KPointCrossover,
-                                                   			      LinearCombinationCrossover,
-                                                   			      FitnessProportionateAverage
-                                                 				      )
-    from evolearn.hyperparameter_tuning.mutation import (Boundary,
-                                               				Shrink
-                                              				 )
-    from evolearn.hyperparameter_tuning.environment import (AdaptiveReproduction,
-                                                  			     AdaptiveMutation,
-                                                  			     Elitism
-                                                  			     )
-    from evolearn.hyperparameter_tuning.genetic_hyperparameter_tuning import GenesSearchCV
-    from sklearn.ensemble import RandomForestRegressor
-    search_space_rf = {
-              'max_depth':(1, 16, 'uniform'),
-              'n_estimators':(100, 1000, 'uniform'),
-              'criterion':('squared_error', 'absolute_error', 'poisson')
-          }  
-    opt = GenesSearchCV(
-          n_gen=10,
-          initialization_fn=Genes(search_space=search_space_rf, pop_size=30),
-          fitness_fn=FitnessFunction(
-              estimator=RandomForestRegressor(n_jobs=-1),
-              cv=3,
-              scoring='neg_mean_absolute_error',
-          ),
-          selection_fn=StochasticUniversalSampling(.7),
-          mating_fn=MatingFunction(increst_prevention=False),
-          reproduction_fn=KPointCrossover(1),
-          mutation_fn=Shrink(),
-          adaptive_population=AdaptiveReproduction(10),
-          elitism=Elitism(),
-          adaptive_mutation=AdaptiveMutation()
-      )   
-    opt.fit(X_train, y_train)
-  
-    Max Fitness: -2023.200579609583
-    {'max_depth': 5, 'n_estimators': 561, 'criterion': 'absolute_error'}
+import pandas as pd
+from sklearn.datasets import make_classification
+from pslearn.hyperparameters_tuning import ParticleSwarmSearchCV
+from pslearn.search_space_characteristics import Categorical, Real, Integer
+from sklearn.linear_model import LogisticRegression
 
 
-The choices of ``selection_fn``, ``reproduction_fn``, ``mutation_fn`` are
-actually up to your personal preference. One can pick what they believe
-are most benefit to their searching preocess.
+X, y = make_classification()
+X = pd.DataFrame(X)
+y = pd.Series(y)
+
+search_space = {
+    "penalty": Categorical("l1", "l2", "elasticnet", None),
+    "max_iter": Integer(10, 20, "exponential"),
+    "tol": Real(.0001, .1, "uniform"),
+    "solver": Categorical('lbfgs', 'liblinear', 'newton-cg', 'sag', 'saga')
+}
+
+psocv = ParticleSwarmSearchCV(
+    search_space=search_space,
+    n_particles=30,
+    estimator=LogisticRegression,
+    cv=5,
+    scoring="accuracy",
+    max_iter=10,
+    n_jobs=1,
+    verbosity=0
+)
+
+psocv.fit(X, y)
+
+print(f"Best Score: {psocv.best_score_}")
+print(f"Best Parameters: {psocv.best_params_}")
+print(f"Best Probabilities: {psocv.best_proba_}")
+
+
+# Best Score: 0.85
+# Best Parameters: {'solver': 'saga', 'penalty': 'l2', 'max_iter': 40, 'tol': 0.9745153143592415}
+# Best Probabilities: {
+#     '__l1_penalty__': 0.0642647183158804,
+#     '__l2_penalty__': 0.7783339727146499, 
+#     '__elasticnet_penalty__': 0.08866833136772977,
+#     '__None_penalty__': 0.0687329776017401, 
+#     'max_iter': 40.0, 'tol': 0.9745153143592415,
+#     '__lbfgs_solver__': 0.11322358364859948,
+#     '__liblinear_solver__': 0.13393371361649387,
+#     '__newton-cg_solver__': 0.1168855854059326,
+#     '__sag_solver__': 0.16334363891584566, 
+#     '__saga_solver__': 0.4726134784131283
+# }
 
 
 Genetic Feature Selection
 -------------------------
 
-To perform feature selection using genetic algoritm,
-you need to first import other modules from 
+import pandas as pd
+from sklearn.datasets import make_classification
+from pslearn.feature_selection import ParticleSwarmFeatureSelectionCV
+from pslearn.search_space_characteristics import Categorical, Real, Integer
+from sklearn.linear_model import LogisticRegression
 
-1) ``evolearn.feature_selection.initialization``
-2) ``evolearn.feature_selection.evaluation``
-3) ``evolearn.feature_selection.selection``
-4) ``evolearn.feature_selection.mating``
-5) ``evolearn.feature_selection.reproduction``
-6) ``evolearn.feature_selection.mutation``
-7) ``evolearn.feature_selection.environment`` (optional)
-8) ``evolearn.feature_selection.genetic_feature_selection`` 
 
-The modules looks similar to those modules from the 
-``GenesSearchCV`` section, but in fact their internal mechanisim 
-work slightly differently. You need to be ware of importing the 
-wrong modules when using genetic feature selection.
+X, y = make_classification()
+X = pd.DataFrame(X)
+y = pd.Series(y)
 
-For example:
+search_space = {
+    "penalty": Categorical("l1", "l2", "elasticnet", None),
+    "max_iter": Integer(10, 20, "exponential"),
+    "tol": Real(.0001, .1, "uniform"),
+    "solver": Categorical('lbfgs', 'liblinear', 'newton-cg', 'sag', 'saga')
+}
 
-    from evolearn.feature_selection.initialization import Genes
-    from evolearn.feature_selection.evaluation import FitnessFunction
-    from evolearn.feature_selection.selection import (RankSelection,
-                                                       RouletteWheelSelection,
-                                                       SteadyStateSelection,
-                                                       TournamentSelection,
-                                                       StochasticUniversalSampling,
-                                                       BoltzmannSelection
-                                                       )
-    from evolearn.feature_selection.mating import MatingFunction
-    from evolearn.feature_selection.reproduction import KPointCrossover
-    from evolearn.feature_selection.mutation import (BitStringMutation,
-                                                    ExchangeMutation,
-                                                    ShiftMutation
-                                                    )
+psocv = ParticleSwarmFeatureSelectionCV(
+    n_particles=30,
+    estimator=LogisticRegression,
+    cv=5,
+    scoring="accuracy",
+    max_iter=10,
+    n_jobs=-1,
+    verbosity=0
+)
 
-    from evolearn.feature_selection.environment import (AdaptiveReproduction,
-                                                    AdaptiveMutation,
-                                                    Elitism
-                                                    )
+psocv.fit(X, y)
 
-    from evolearn.feature_selection.genetic_feature_selection import GeneticFeatureSelectionCV
-    from sklearn.ensemble import RandomForestRegressor
-    opt = GeneticFeatureSelectionCV(
-       n_gen=10,
-       initialization_fn=Genes(pop_size=50),
-       fitness_fn=FitnessFunction(
-           estimator=RandomForestRegressor(n_jobs=-1),
-           cv=3,
-           scoring='neg_mean_absolute_error'
-       ),
-       selection_fn=RouletteWheelSelection(.7),
-       mating_fn=MatingFunction(),
-       reproduction_fn=KPointCrossover(k=4),
-       mutation_fn=BitStringMutation(),
-       adaptive_population=None,
-       elitism=None,
-       adaptive_mutation=None
-       )
+print(f"Best Score: {psocv.best_score_}")
+print(f"Best Features: {psocv.best_features_}")
+print(f"Best Probabilities: {psocv.best_proba_}")
 
-    opt.fit(X_train, y_train)
-    print(opt.best_fitness_)
-    print(opt.best_params_)
+# Best Score: 0.9
+# Best Features: (6, 10, 14, 17)
+# Best Probabilities: [0.782711593275808, 0.8084822421165769, 0.8219410644289048, 0.7502198513093719]
 
-    -2797.7245589631652
-    {'age': True, 'sex': False, 'bmi': True, 'children': True, 'smoker': True, 'region': False}
