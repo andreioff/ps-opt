@@ -11,6 +11,8 @@ Install it using pip:
 Hyperparameters Tuning
 ----------------
 
+https://github.com/yuenshingyan/pslearn/blob/main/hyperparameters_tuning_example.py
+
 
 Feature Selection
 -------------------------
