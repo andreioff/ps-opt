@@ -101,6 +101,8 @@ print(f"Best Features: {psocv.best_features_}")
 print(f"Best Probabilities: {psocv.best_proba_}")
 
 Best Score: 0.9
+
 Best Features: (6, 10, 14, 17)
+
 Best Probabilities: [0.782711593275808, 0.8084822421165769, 0.8219410644289048, 0.7502198513093719]
 
