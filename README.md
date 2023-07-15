@@ -1,5 +1,6 @@
 # pslearn
-Particle Swarm Optimization For Machine Learning
+Hyperparameters Tuning with Particle Swarm Optimization
+
 
 Installation
 ------------
