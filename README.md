@@ -1,4 +1,4 @@
-# pslearn
+# ps-opt
 This Python package provides a tool for hyperparameter tuning and feature selection in machine learning models using Particle Swarm Optimization (PSO) techniques. The package includes a vanilla PSO for feature selection, a vanilla PSO for hyperparameter tuning, and two different PSO variants for machine learning hyperparameter tuning.
 
 ## Features
@@ -20,15 +20,15 @@ Installation
 
 Install it using pip:
 
-    pip install pslearn
+    pip install ps-opt
 
 Hyperparameters Tuning
 ----------------
 
     import pandas as pd
     from sklearn.datasets import make_classification
-    from pslearn.hyperparameters_tuning import ParticleSwarmSearchCV
-    from pslearn.search_space_characteristics import Categorical, Real, Integer
+    from ps_opt.hyperparameters_tuning import ParticleSwarmSearchCV
+    from ps_opt.search_space_characteristics import Categorical, Real, Integer
     from sklearn.linear_model import LogisticRegression
     
     
@@ -66,8 +66,8 @@ Feature Selection
 
     import pandas as pd
     from sklearn.datasets import make_classification
-    from pslearn.feature_selection import ParticleSwarmFeatureSelectionCV
-    from pslearn.search_space_characteristics import Categorical, Real, Integer
+    from ps_opt.feature_selection import ParticleSwarmFeatureSelectionCV
+    from ps_opt.search_space_characteristics import Categorical, Real, Integer
     from sklearn.linear_model import LogisticRegression
     
     
