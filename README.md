@@ -20,7 +20,7 @@ Installation
 
 Install it using pip:
 
-    pip install ps-opt
+    pip install ps-optimize
 
 Hyperparameters Tuning
 ----------------
