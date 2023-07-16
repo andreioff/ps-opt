@@ -75,13 +75,6 @@ Feature Selection
     X = pd.DataFrame(X)
     y = pd.Series(y)
     
-    search_space = {
-        "penalty": Categorical("l1", "l2", "elasticnet", None),
-        "max_iter": Integer(10, 20, "exponential"),
-        "tol": Real(.0001, .1, "uniform"),
-        "solver": Categorical('lbfgs', 'liblinear', 'newton-cg', 'sag', 'saga')
-    }
-    
     psocv = ParticleSwarmFeatureSelectionCV(
         n_particles=30,
         estimator=LogisticRegression,
