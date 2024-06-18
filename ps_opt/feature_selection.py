@@ -92,9 +92,6 @@ class ParticleSwarmFeatureSelectionCV(_Initialization, _Evaluation, _Communicati
         if not isinstance(n_particles, int):
             raise ValueError("Argument 'n_particles' only accept integer as input.")
 
-        if not isinstance(cv, int):
-            raise ValueError("Argument 'cv' only accept integer as input.")
-
         if not isinstance(scoring, str):
             raise ValueError("Argument 'scoring' only accept string as input.")
 

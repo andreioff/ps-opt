@@ -79,9 +79,6 @@ class ParticleSwarmSearchCV(_Initialization, _Evaluation, _Communication):
         if not isinstance(n_particles, int):
             raise ValueError("Argument 'n_particles' only accepts integer as input.")
 
-        if not isinstance(cv, int):
-            raise ValueError("Argument 'cv' only accepts integer as input.")
-
         if not isinstance(scoring, str):
             raise ValueError("Argument 'scoring' only accepts string as input.")
 
@@ -185,9 +182,6 @@ class SlicedParticleSwarmSearchCV(_Initialization, _Evaluation, _Communication):
 
         if not isinstance(n_particles, int):
             raise ValueError("Argument 'n_particles' only accepts integer as input.")
-
-        if not isinstance(cv, int):
-            raise ValueError("Argument 'cv' only accepts integer as input.")
 
         if not isinstance(scoring, str):
             raise ValueError("Argument 'scoring' only accepts string as input.")
@@ -353,9 +347,6 @@ class MultiSwarmParticleSwarmSearchCV(_Initialization, _Evaluation, _Communicati
 
         if not isinstance(n_particles, int):
             raise ValueError("Argument 'n_particles' only accepts integer as input.")
-
-        if not isinstance(cv, int):
-            raise ValueError("Argument 'cv' only accepts integer as input.")
 
         if not isinstance(scoring, str):
             raise ValueError("Argument 'scoring' only accepts string as input.")

@@ -124,11 +124,8 @@ class _Evaluation(_Base):
                     out during feature selection processes.
         """
 
-        if not isinstance(cv, int):
-            raise ValueError("Argument 'cv' only accept integer as input.")
-
         if not isinstance(scoring, str):
-            raise ValueError("Argument 'cv' only accept string as input.")
+            raise ValueError("Argument 'scoring' only accept string as input.")
 
         if not isinstance(n_jobs, int):
             raise ValueError("Argument 'n_jobs' only accept integer as input.")
